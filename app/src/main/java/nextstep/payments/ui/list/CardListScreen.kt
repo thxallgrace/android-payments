@@ -36,6 +36,8 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import nextstep.payments.R
 import nextstep.payments.data.model.CreditCard
 import nextstep.payments.ui.component.PaymentCard
+import nextstep.payments.ui.component.PaymentCardLayout
+import nextstep.payments.ui.model.BankType
 import nextstep.payments.ui.theme.DarkGrey
 import nextstep.payments.ui.theme.Grey
 
@@ -163,15 +165,10 @@ fun AddCard(
     onClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    Box(
-        modifier = modifier
-            .size(
-                width = 208.dp,
-                height = 124.dp,
-            )
-            .clip(shape = RoundedCornerShape(5.dp))
-            .background(color = Grey)
-            .clickable(onClick = onClick)
+    PaymentCardLayout(
+        backgroundColor = Grey,
+        modifier = modifier,
+        onClick = onClick
     ) {
         Icon(
             modifier = Modifier
@@ -184,18 +181,37 @@ fun AddCard(
     }
 }
 
-private val dummyCard = CreditCard(
-
-)
-
 private class CardListScreenPreviewParameters : PreviewParameterProvider<CreditCardUiState> {
     override val values: Sequence<CreditCardUiState> = sequenceOf(
         CreditCardUiState.Empty,
         CreditCardUiState.One(
-            card = dummyCard
+            card = CreditCard(
+                cardNumber = "0000-1111-2222-3333",
+                ownerName = "Kim",
+                expiredDate = "4/25",
+                bank = BankType.SHINHAN
+            )
         ),
         CreditCardUiState.Many(
-            cards = listOf(dummyCard, dummyCard, dummyCard)
+            cards = listOf(
+                CreditCard(
+                    cardNumber = "0000-1111-2222-3333",
+                    ownerName = "Kim",
+                    expiredDate = "04/25",
+                    bank = BankType.SHINHAN
+                ),
+                CreditCard(
+                    cardNumber = "0000-1111-2222-3333",
+                    ownerName = "Park",
+                    expiredDate = "04/25",
+                    bank = BankType.KB
+                ),
+                CreditCard(
+                    cardNumber = "0000-1111-2222-3333",
+                    ownerName = "Song",
+                    expiredDate = "04/25",
+                    bank = BankType.LOTTE
+                ))
         )
     )
 }

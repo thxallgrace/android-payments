@@ -15,3 +15,13 @@ val Yellow = Color(0xFFCBBA64)
 
 val Grey = Color(0xFFE5E5E5)
 val DarkGrey = Color(0xFF575757)
+
+// Bank Card Color
+val BCBrandColor = Color(0xFFF04651)
+val SHINHANBrandColor = Color(0xFF0046ff)
+val KAKAOBANKBrandColor = Color(0xFF000000)
+val HYUNDAIBrandColor = Color(0xFF575757)
+val WOORIBrandColor = Color(0xFF037bc8)
+val LOTTEBrandColor = Color(0xFFed1d24)
+val HANABrandColor = Color(0xFF009490)
+val KBBrandColor = Color(0xFF695F54)

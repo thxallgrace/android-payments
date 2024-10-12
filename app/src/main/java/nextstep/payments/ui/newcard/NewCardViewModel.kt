@@ -6,6 +6,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import nextstep.payments.data.PaymentCardsRepository
 import nextstep.payments.data.model.CreditCard
+import nextstep.payments.ui.model.BankType
 
 class NewCardViewModel(
     private val repository: PaymentCardsRepository = PaymentCardsRepository
@@ -25,6 +26,9 @@ class NewCardViewModel(
 
     private val _cardAdded = MutableStateFlow(false)
     val cardAdded: StateFlow<Boolean> = _cardAdded.asStateFlow()
+
+    private val _selectedBank = MutableStateFlow(BankType.NOT_SELECTED)
+    val selectedBank = _selectedBank.asStateFlow()
 
     fun setCardNumber(cardNumber: String) {
         _cardNumber.value = cardNumber
@@ -47,7 +51,12 @@ class NewCardViewModel(
             cardNumber = cardNumber.value,
             ownerName = ownerName.value,
             expiredDate = expiredDate.value,
+            bank = selectedBank.value
         ))
         _cardAdded.value = true
+    }
+
+    fun setSelectedBank(bankTypeModel: BankType) {
+        _selectedBank.value = bankTypeModel
     }
 }
