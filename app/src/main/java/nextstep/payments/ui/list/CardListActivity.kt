@@ -30,6 +30,12 @@ class CardListActivity : ComponentActivity() {
                         val intent = Intent(this, NewCardActivity::class.java)
                         launcher.launch(intent)
                     },
+                    navigateToEditCardScreen = {
+                        val intent = Intent(this, NewCardActivity::class.java).apply {
+                            putExtra("selectedCard", it)
+                        }
+                        launcher.launch(intent)
+                    }
                 )
             }
         }

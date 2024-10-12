@@ -1,5 +1,6 @@
 package nextstep.payments.ui.newcard
 
+import android.media.tv.TvContract.PreviewPrograms
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -38,6 +39,7 @@ import nextstep.payments.ui.utils.ExpiredDateVisualTransformation
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun NewCardScreen(
+    isEditMode: Boolean,
     viewModel: NewCardViewModel,
     navigateToCardList: () -> Unit,
     modifier: Modifier = Modifier,
@@ -48,6 +50,7 @@ internal fun NewCardScreen(
     val password by viewModel.password.collectAsStateWithLifecycle()
     val cardAdded by viewModel.cardAdded.collectAsStateWithLifecycle()
     val selectedBank by viewModel.selectedBank.collectAsStateWithLifecycle()
+    val enableSaveButton by viewModel.enableSaveButton.collectAsStateWithLifecycle()
 
     LaunchedEffect(cardAdded) {
         if (cardAdded) navigateToCardList()
@@ -65,6 +68,7 @@ internal fun NewCardScreen(
     }
 
     NewCardScreen(
+        isEditMode = isEditMode,
         cardNumber = cardNumber,
         expiredDate = expiredDate,
         ownerName = ownerName,
@@ -74,8 +78,9 @@ internal fun NewCardScreen(
         setExpiredDate = viewModel::setExpiredDate,
         setOwnerName = viewModel::setOwnerName,
         setPassword = viewModel::setPassword,
+        enableSaveButton = enableSaveButton,
         onBackClick = navigateToCardList,
-        onSaveClick = viewModel::addCard,
+        onSaveClick = if(isEditMode) viewModel::updateCard else viewModel::addCard,
         bottomSheetState = modalBottomSheetState,
         onSelectBank = viewModel::setSelectedBank,
         modifier = modifier
@@ -86,6 +91,7 @@ internal fun NewCardScreen(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun NewCardScreen(
+    isEditMode: Boolean,
     cardNumber: String,
     expiredDate: String,
     ownerName: String,
@@ -95,13 +101,14 @@ private fun NewCardScreen(
     setExpiredDate: (String) -> Unit,
     setOwnerName: (String) -> Unit,
     setPassword: (String) -> Unit,
+    enableSaveButton: Boolean,
     onBackClick: () -> Unit,
     onSaveClick: () -> Unit,
     bottomSheetState: SheetState,
     onSelectBank: (BankType) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    if(selectedBank == BankType.NOT_SELECTED) {
+    if(selectedBank == BankType.NOT_SELECTED && !isEditMode) {
         ModalBottomSheet(
             modifier = modifier,
             sheetState = bottomSheetState,
@@ -118,7 +125,17 @@ private fun NewCardScreen(
     }
 
     Scaffold(
-        topBar = { NewCardTopBar(onBackClick = onBackClick, onSaveClick = onSaveClick) },
+        topBar = { NewCardTopBar(
+            title = if(isEditMode) {
+                stringResource(id = R.string.payment_edit_title)
+            } else {
+                stringResource(id = R.string.payment_register_title)
+            },
+            enableSaveButton = enableSaveButton,
+            onBackClick = onBackClick,
+            onSaveClick = onSaveClick
+        )
+     },
         modifier = modifier
     ) { innerPadding ->
         Column(
@@ -187,12 +204,14 @@ private fun NewCardScreen(
     }
 }
 
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Preview
 @Composable
 private fun StatelessNewCardScreenPreview() {
     PaymentsTheme {
         NewCardScreen(
+            isEditMode = true,
             cardNumber = "1111222233334444",
             expiredDate = "0000",
             ownerName = "김은혜",
@@ -202,6 +221,7 @@ private fun StatelessNewCardScreenPreview() {
             setExpiredDate = {},
             setOwnerName = {},
             setPassword = {},
+            enableSaveButton = false,
             onBackClick = {},
             onSaveClick = {},
             bottomSheetState = rememberModalBottomSheetState(),
