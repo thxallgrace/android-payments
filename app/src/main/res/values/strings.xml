@@ -5,6 +5,7 @@
     <string name="card_list_empty_desc">새로운 카드를 등록해주세요</string>
 
     <string name="payment_register_title">카드 추가</string>
+    <string name="payment_edit_title">카드 수정</string>
     <string name="payment_card_number_label">카드 번호</string>
     <string name="payment_card_number_placeholder">0000 - 0000 - 0000 - 0000</string>
     <string name="payment_card_expired_date_label">만료일</string>

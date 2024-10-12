@@ -10,4 +10,8 @@ object PaymentCardsRepository {
     fun addCard(card: CreditCard) {
         _cards.add(card)
     }
+
+    fun updateCard(cardNumber: String, newCard: CreditCard) {
+        _cards.replaceAll { if (it.cardNumber == cardNumber) newCard else it }
+    }
 }

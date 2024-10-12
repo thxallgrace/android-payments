@@ -10,18 +10,23 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
-import nextstep.payments.R
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewParameter
+import androidx.compose.ui.tooling.preview.PreviewParameterProvider
+import nextstep.payments.data.model.CreditCard
+import nextstep.payments.ui.model.BankType
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun NewCardTopBar(
+    title: String,
+    enableSaveButton: Boolean,
     onBackClick: () -> Unit,
     onSaveClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     TopAppBar(
-        title = { Text(text = stringResource(id = R.string.payment_register_title)) },
+        title = { Text(text = title) },
         navigationIcon = {
             IconButton(onClick = { onBackClick() }) {
                 Icon(
@@ -31,7 +36,10 @@ fun NewCardTopBar(
             }
         },
         actions = {
-            IconButton(onClick = { onSaveClick() }) {
+            IconButton(
+                onClick = { if(enableSaveButton) onSaveClick() },
+                enabled = enableSaveButton
+            ) {
                 Icon(
                     imageVector = Icons.Filled.Check,
                     contentDescription = "완료",
@@ -40,4 +48,23 @@ fun NewCardTopBar(
         },
         modifier = modifier
     )
+}
+
+private class NewCardTopBarPreviewParameters : PreviewParameterProvider<Pair<String, Boolean>> {
+    override val values: Sequence<Pair<String, Boolean>> = sequenceOf(
+        "카드 추가" to true,
+        "카드 수정" to false,
+    )
+}
+
+@Preview
+@Composable
+fun NewCardTopBarPreview(
+    @PreviewParameter(NewCardTopBarPreviewParameters::class) parameter: Pair<String, Boolean>
+) {
+    NewCardTopBar(
+        title = parameter.first,
+        enableSaveButton = parameter.second,
+        onBackClick = { /*TODO*/ },
+        onSaveClick = { /*TODO*/ })
 }
